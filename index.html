@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat with uNtsika</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f2f2f2; padding: 20px; }
+    #chatbox { background: white; border-radius: 8px; padding: 20px; max-width: 500px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .message { margin: 10px 0; }
+    .user { text-align: right; color: blue; }
+    .bot { text-align: left; color: green; }
+    input, button { padding: 10px; font-size: 16px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div id="chatbox">
+    <h2>uNtsika - Mzansi Bank Assistant</h2>
+    <div id="messages"></div>
+    <input type="text" id="userInput" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const message = input.value;
+      if (!message.trim()) return;
+
+      const messagesDiv = document.getElementById('messages');
+      messagesDiv.innerHTML += `<div class='message user'><strong>You:</strong> ${message}</div>`;
+
+      const response = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+      const data = await response.json();
+      messagesDiv.innerHTML += `<div class='message bot'><strong>uNtsika:</strong> ${data.response}</div>`;
+      input.value = '';
+    }
+  </script>
+</body>
+</html>
